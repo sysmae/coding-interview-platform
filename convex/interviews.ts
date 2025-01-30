@@ -64,6 +64,7 @@ export const createInterview = mutation({
   },
 })
 
+// 면접 상태를 업데이트하는 뮤테이션
 export const updateInterviewStatus = mutation({
   args: {
     id: v.id('interviews'),

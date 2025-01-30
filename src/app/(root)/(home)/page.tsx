@@ -1,4 +1,4 @@
-'use client'
+'use client' // 클라이언트에서 실행
 import ActionCard from '@/components/ActionCard'
 import { QUICK_ACTIONS } from '@/constants'
 import { useUserRole } from '@/hooks/useUserRole'
@@ -8,14 +8,16 @@ import { api } from '../../../../convex/_generated/api'
 import { useRouter } from 'next/navigation'
 import MeetingModal from '@/components/MeetingModal'
 import LoaderUI from '@/components/LoaderUI'
+import MeetingCard from '@/components/MeetingCard'
+import { Loader2Icon } from 'lucide-react'
 
 export default function Home() {
   const router = useRouter()
-  const { isInterviewer, isCandidate, isLoading } = useUserRole()
-  const interview = useQuery(api.interviews.getMyInterviews)
+  const { isInterviewer, isCandidate, isLoading } = useUserRole() // 사용자 역할을 가져오는 훅
+  const interviews = useQuery(api.interviews.getMyInterviews) // 사용자의 인터뷰 데이터를 가져오는 쿼리
 
-  const [showModal, setShowModal] = useState(false)
-  const [modalType, setModalType] = useState<'start' | 'join'>()
+  const [showModal, setShowModal] = useState(false) // 모달 표시 상태
+  const [modalType, setModalType] = useState<'start' | 'join'>() // 모달 타입
 
   const handleQuickAction = (title: string) => {
     switch (title) {
@@ -37,8 +39,9 @@ export default function Home() {
         break
     }
   }
+
   if (isLoading) {
-    return <LoaderUI />
+    return <LoaderUI /> // 로딩 중이면 로더 UI 표시
   }
 
   return (
@@ -76,7 +79,30 @@ export default function Home() {
         </>
       ) : (
         <>
-          <div>참가자 페이지</div>
+          <div>
+            <h1 className="text-3xl font-bold">당신의 인터뷰</h1>
+            <p className="text-muted-foreground mt-1">
+              예정된 인터뷰를 보고 참가하세요
+            </p>
+          </div>
+
+          <div className="mt-8">
+            {interviews === undefined ? (
+              <div className="flex justify-center py-12">
+                <Loader2Icon className="h-8 w-8 animate-spin text-muted-foreground" />
+              </div>
+            ) : interviews.length > 0 ? (
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {interviews.map((interview) => (
+                  <MeetingCard key={interview._id} interview={interview} />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12 text-muted-foreground">
+                현재 예정된 인터뷰가 없습니다
+              </div>
+            )}
+          </div>
         </>
       )}
     </div>
