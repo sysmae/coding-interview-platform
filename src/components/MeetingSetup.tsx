@@ -10,8 +10,8 @@ import { Card } from './ui/card'
 import { Switch } from './ui/switch'
 
 const MeetingSetup = ({ onSetupComplete }: { onSetupComplete: () => void }) => {
-  const [isCameraDisabled, setIsCameraDisabled] = useState(false)
-  const [isMicDisabled, setIsMicDisabled] = useState(false)
+  const [isCameraDisabled, setIsCameraDisabled] = useState(true)
+  const [isMicDisabled, setIsMicDisabled] = useState(true)
 
   const call = useCall() // 이미 /meeting/[id]/page.tsx에서 StreamCall로 감싸져 있기 때문에 call을 가져올 수 있음
 
